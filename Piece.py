@@ -1,7 +1,8 @@
 blocked_path = "There's a piece in the path."
 incorrect_path = "This piece does not move in this pattern."
 
-class Piece():
+
+class Piece:
     """
     A class to represent a piece in chess
     Attributes:
@@ -35,6 +36,7 @@ class Piece():
         else:
             return '\033[94m' + self.name + '\033[0m'
 
+
 class GhostPawn(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -42,6 +44,7 @@ class GhostPawn(Piece):
 
     def is_valid_move(self, board, start, to):
         return False
+
 
 class Pawn(Piece):
     def __init__(self, color):
@@ -53,7 +56,7 @@ class Pawn(Piece):
         if self.color:
             # diagonal move
             if start[0] == to[0] + 1 and (start[1] == to[1] + 1 or start[1] == to[1] - 1):
-                if board.board[to[0]][to[1]] != None:
+                if board.board[to[0]][to[1]] is not None:
                     self.first_move = False
                     return True
                 print("Cannot move diagonally unless taking.")
@@ -63,7 +66,7 @@ class Pawn(Piece):
             if start[1] == to[1]:
                 if (start[0] - to[0] == 2 and self.first_move) or (start[0] - to[0] == 1):
                     for i in range(start[0] - 1, to[0] - 1, -1):
-                        if board.board[i][start[1]] != None:
+                        if board.board[i][start[1]] is not None:
                             print(blocked_path)
                             return False
                     # insert a GhostPawn
@@ -79,7 +82,7 @@ class Pawn(Piece):
 
         else:
             if start[0] == to[0] - 1 and (start[1] == to[1] - 1 or start[1] == to[1] + 1):
-                if board.board[to[0]][to[1]] != None:
+                if board.board[to[0]][to[1]] is not None:
                     self.first_move = False
                     return True
                 print(blocked_path)
@@ -87,7 +90,7 @@ class Pawn(Piece):
             if start[1] == to[1]:
                 if (to[0] - start[0] == 2 and self.first_move) or (to[0] - start[0] == 1):
                     for i in range(start[0] + 1, to[0] + 1):
-                        if board.board[i][start[1]] != None:
+                        if board.board[i][start[1]] is not None:
                             print(blocked_path)
                             return False
                     # insert a GhostPawn

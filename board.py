@@ -1,6 +1,7 @@
 import Piece
 
-class Board():
+
+class Board:
     """
         A class to represent a chess board.
     """
@@ -8,9 +9,9 @@ class Board():
         self.board = []
 
         for i in range(5):
-            self.board.append(["-"]*5)
+            self.board.append([None] * 5)
 
-        #Player 1
+        # Player 1
         for i in range(5):
             self.board[4][i] = Piece.Pawn(True)
 
@@ -22,7 +23,7 @@ class Board():
         for i in range(len(self.board)):
             tmp_str = "|"
             for j in self.board[i]:
-                if j == None or j.name == 'GP':
+                if j is None or j.name == 'GP':
                     tmp_str += "   |"
                 elif len(j.name) == 2:
                     tmp_str += (" " + str(j) + "|")
