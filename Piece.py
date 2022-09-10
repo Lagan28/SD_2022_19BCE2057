@@ -1,43 +1,102 @@
-from Coordinate import Coordinate as C
-from Move import Move
+blocked_path = "There's a piece in the path."
+incorrect_path = "This piece does not move in this pattern."
 
-WHITE = True
-BLACK = False
-X = 0
-Y = 1
+class Piece():
+    """
+    A class to represent a piece in chess
+    Attributes:
+    --------
+    Pawn->P
 
-class Piece:
-    def __init__(self, board, side, position, movesMade=0):
-        self.board = board
-        self.side = side
-        self.position = position
-        self.movesMade = 0
+    Methods:
+    --------
+    is_valid_move(board, start, to) -> bool
+        Returns True if moving the piece at `start` to `to` is a legal
+        move on board `board`
+        Precondition: [start] and [to] are valid coordinates on the board.board
+    is_white() -> bool
+        Return True if piece is white
 
-    def __str__(self):
-        sideString = 'White' if self.side == WHITE else 'Black'
-        return 'Type : ' + type(self).__name__ + ' - Position : ' + str(self.position) + " - Side : " + sideString + ' -- Value : ' + str(self.value) + \
-               " -- Moves made : " + str(self.movesMade)
+    """
 
-    def movesInDirectionFromPos(self, pos, direction, side):
-        for dis in range(1, 5):
-            movement = C(dis * direction[X], dis * direction[Y])
-            newPos = pos + movement
-            if self.board.isValidPos(newPos):
-                pieceAtNewPos = self.board.pieceAtPosition(newPos)
-                if pieceAtNewPos is None:
-                    yield Move(self, newPos)
+    def __init__(self, color):
+        self.name = ""
+        self.color = color
 
-                elif pieceAtNewPos is not None:
-                    if pieceAtNewPos.side != side:
-                        yield Move(self, newPos)
-                    return
-
-    def __eq__(self, other):
-        if self.board == other.board and self.side == other.side and self.position == other.position and self.__class__ == other.__class__:
-            return True
+    def is_valid_move(self, board, start, to):
         return False
 
-    def copy(self):
-        cpy = self.__class__(self.board, self.side, self.position,
-                             movesMade=self.movesMade)
-        return cpy
+    def is_white(self):
+        return self.color
+
+    def __str__(self):
+        if self.color:
+            return self.name
+        else:
+            return '\033[94m' + self.name + '\033[0m'
+
+class GhostPawn(Piece):
+    def __init__(self, color):
+        super().__init__(color)
+        self.name = "GP"
+
+    def is_valid_move(self, board, start, to):
+        return False
+
+class Pawn(Piece):
+    def __init__(self, color):
+        super().__init__(color)
+        self.name = "P"
+        self.first_move = True
+
+    def is_valid_move(self, board, start, to):
+        if self.color:
+            # diagonal move
+            if start[0] == to[0] + 1 and (start[1] == to[1] + 1 or start[1] == to[1] - 1):
+                if board.board[to[0]][to[1]] != None:
+                    self.first_move = False
+                    return True
+                print("Cannot move diagonally unless taking.")
+                return False
+
+            # vertical move
+            if start[1] == to[1]:
+                if (start[0] - to[0] == 2 and self.first_move) or (start[0] - to[0] == 1):
+                    for i in range(start[0] - 1, to[0] - 1, -1):
+                        if board.board[i][start[1]] != None:
+                            print(blocked_path)
+                            return False
+                    # insert a GhostPawn
+                    if start[0] - to[0] == 2:
+                        board.board[start[0] - 1][start[1]] = GhostPawn(self.color)
+                        board.white_ghost_piece = (start[0] - 1, start[1])
+                    self.first_move = False
+                    return True
+                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+                return False
+            print(incorrect_path)
+            return False
+
+        else:
+            if start[0] == to[0] - 1 and (start[1] == to[1] - 1 or start[1] == to[1] + 1):
+                if board.board[to[0]][to[1]] != None:
+                    self.first_move = False
+                    return True
+                print(blocked_path)
+                return False
+            if start[1] == to[1]:
+                if (to[0] - start[0] == 2 and self.first_move) or (to[0] - start[0] == 1):
+                    for i in range(start[0] + 1, to[0] + 1):
+                        if board.board[i][start[1]] != None:
+                            print(blocked_path)
+                            return False
+                    # insert a GhostPawn
+                    if to[0] - start[0] == 2:
+                        board.board[start[0] + 1][start[1]] = GhostPawn(self.color)
+                        board.black_ghost_piece = (start[0] + 1, start[1])
+                    self.first_move = False
+                    return True
+                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+                return False
+            print(incorrect_path)
+            return False
