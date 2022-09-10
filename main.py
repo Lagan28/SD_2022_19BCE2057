@@ -56,11 +56,11 @@ def translate(s):
     try:
         row = int(s[0])
         col = s[1]
-        if row < 1 or row > 8:
-            print(s[0] + "is not in the range from 1 - 8")
+        if row < 1 or row > 5:
+            print(s[0] + "is not in the range from 1 - 5")
             return None
-        if col < 'a' or col > 'h':
-            print(s[1] + "is not in the range from a - h")
+        if col < 'a' or col > 'e':
+            print(s[1] + "is not in the range from A - E")
             return None
         dict = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4}
         return 5 - row, dict[col]

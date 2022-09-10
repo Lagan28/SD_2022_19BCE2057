@@ -1,5 +1,6 @@
 import Piece
 
+alphabet = ["A", "B", "C", "D", "E"]
 
 class Board:
     """
@@ -20,8 +21,9 @@ class Board:
             self.board[0][i] = Piece.Pawn(False)
 
     def print_board(self):
+        print('    ' + '   '.join(map(str, alphabet)))
         for i in range(len(self.board)):
-            tmp_str = "|"
+            tmp_str = str(len(self.board)-i) + " |"
             for j in self.board[i]:
                 if j is None or j.name == 'GP':
                     tmp_str += "   |"

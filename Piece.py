@@ -55,11 +55,12 @@ class Pawn(Piece):
     def is_valid_move(self, board, start, to):
         if self.color:
             # diagonal move
+            print("\nPlayer 1 Moved")
             if start[0] == to[0] + 1 and (start[1] == to[1] + 1 or start[1] == to[1] - 1):
                 if board.board[to[0]][to[1]] is not None:
                     self.first_move = False
                     return True
-                print("Cannot move diagonally unless taking.")
+                print("Cannot move diagonally unless taking.\n")
                 return False
 
             # vertical move
@@ -75,12 +76,13 @@ class Pawn(Piece):
                         board.white_ghost_piece = (start[0] - 1, start[1])
                     self.first_move = False
                     return True
-                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+                print("Invalid move" + " or " + "Cannot move forward twice if not first move.\n")
                 return False
             print(incorrect_path)
             return False
 
         else:
+            print("\nPlayer 2 Move")
             if start[0] == to[0] - 1 and (start[1] == to[1] - 1 or start[1] == to[1] + 1):
                 if board.board[to[0]][to[1]] is not None:
                     self.first_move = False
@@ -99,7 +101,14 @@ class Pawn(Piece):
                         board.black_ghost_piece = (start[0] + 1, start[1])
                     self.first_move = False
                     return True
-                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+                print("Invalid move" + " or " + "Cannot move forward twice if not first move.\n")
                 return False
             print(incorrect_path)
             return False
+
+class Hero(Piece):
+    def __init__(self, color):
+        super().__init__(color)
+        self.name = "H"
+        self.first_move = True
+
